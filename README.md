@@ -6,7 +6,7 @@ described by mungofitch over at The Motley Fool investment message boards.
 
 The basic premise is that when the S&P stops making new highs, investors
 get pessimistic and stocks fall. When it starts making new highs again,
-optimism takes over and bull markets stop. The ninety-nine day signal has 2
+optimism takes over and bull markets start. The ninety-nine day signal has 2
 parts and coincidentally uses 99 days as the cut-off for both parts. It
 looks at whether a new high has been made recently. It defines "high" as a
 99 day high. It defines "recently" as 99 days. So, it looks for a new
@@ -21,7 +21,7 @@ bear markets.
 
 ### Required software
 
-You need the ystockquote module from http://www.goldb.org/ystockquote.html
+You need the ystockquote module from [http://www.goldb.org/ystockquote.html](http://www.goldb.org/ystockquote.html)
 
 ### How to use
 
