@@ -9,7 +9,7 @@
 #
 
 try:
-    import ystockquoted
+    import ystockquote
 except ImportError:
     print "Please download the ystockquote module from http://www.goldb.org/ystockquote.html"
     raise
