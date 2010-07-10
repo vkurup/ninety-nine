@@ -58,13 +58,15 @@ else:
 if data:
     first = data["first"]
     rest = quotes
-    high = newhigh = data["newhigh"]
+    newhigh_row = sorted(first, key=float_sorter).pop()
+    high = newhigh = newhigh_row[2]
     signal = data["signal"]
 else:
     # split into 2 groups
     first, rest = quotes[0:lookback], quotes[lookback:]
     # Find the max of the first group and initialize the signal
-    high = float(sorted(first, key=float_sorter).pop()[2])
+    newhigh_row = sorted(first, key=float_sorter).pop()
+    high = float(newhigh_row[2])
     signal = 0
 
 while rest:
@@ -75,7 +77,8 @@ while rest:
     first.append(rest.pop(0))
 
     # recalculate signal
-    newhigh = float(sorted(first, key=float_sorter).pop()[2])
+    newhigh_row = sorted(first, key=float_sorter).pop()
+    newhigh = float(newhigh_row[2])
     if newhigh > high:
         signal = 1
     elif newhigh < high:
@@ -90,13 +93,16 @@ while rest:
 
 if signal:
     print "Current signal: Buy"
+    date_of_newhigh = newhigh_row[0]
+    index_of_newhigh = [x[0] for x in first].index(date_of_newhigh)
+    print "New high will reset in " + str(lookback - index_of_newhigh) + " days."
 else:
     print "Current signal: Sell"
     close = float(first[-1][4])
     pct_to_rise = round((newhigh - close) / close * 100, 1)
     print "Market needs to rise " + pct_to_rise + "% before signal changes."
 
-data = {'first': first, 'newhigh': newhigh, 'signal': signal}
+data = {'first': first, 'signal': signal}
 output = open('99.pkl', 'w')
 pickle.dump(data, output)
 output.close()
