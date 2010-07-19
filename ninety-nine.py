@@ -99,7 +99,7 @@ if signal:
 else:
     print "Current signal: Sell"
     close = float(first[-1][4])
-    pct_to_rise = round((newhigh - close) / close * 100, 1)
+    pct_to_rise = str(round((newhigh - close) / close * 100, 1))
     print "Market needs to rise " + pct_to_rise + "% before signal changes."
 
 data = {'first': first, 'signal': signal}
