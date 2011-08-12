@@ -59,7 +59,7 @@ if data:
     first = data["first"]
     rest = quotes
     newhigh_row = sorted(first, key=float_sorter).pop()
-    high = newhigh = newhigh_row[2]
+    high = newhigh = float(newhigh_row[2])
     signal = data["signal"]
 else:
     # split into 2 groups
