@@ -46,7 +46,7 @@ if data:
     start_date = new_start_date.strftime('%Y%m%d')
 
 # Get quotes
-if start_date == end_date:
+if start_date >= end_date:
     quotes = []
 else:
     quotes = ystockquote.get_historical_prices(symbol, start_date, end_date)
@@ -95,7 +95,7 @@ if signal:
     print "Current signal: Buy"
     date_of_newhigh = newhigh_row[0]
     index_of_newhigh = [x[0] for x in first].index(date_of_newhigh)
-    print "New high will reset in " + str(lookback - index_of_newhigh) + " days."
+    print "New high will reset in " + str(lookback - (len(first) - index_of_newhigh)) + " days."
 else:
     print "Current signal: Sell"
     close = float(first[-1][4])
