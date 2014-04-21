@@ -61,8 +61,6 @@ if data:
 else:
     # split into 2 groups
     first, rest = quotes[0:lookback], quotes[lookback:]
-    print(first)
-    print(rest)
     # Find the max of the first group and initialize the signal
     newhigh_row = sorted(first, key=float_sorter).pop()
     high = float(newhigh_row[1]['High'])
