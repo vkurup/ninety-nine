@@ -10,14 +10,14 @@ optimism takes over and bull markets start. The ninety-nine day signal has 2
 parts and coincidentally uses 99 days as the cut-off for both parts. It
 looks at whether a new high has been made recently. It defines "high" as a
 99 day high. It defines "recently" as 99 days. So, it looks for a new
-99-day high within the last 99 days. The number is arbitrary. Hop over the
-the Motley Fool boards to look how the dates have been tuned and pick
+99-day high within the last 99 days. The number is arbitrary. Hop over to
+the Motley Fool boards to see how the dates have been tuned and pick
 different ones, if you like.
 
 I like this one, because it's simple, easy to calculate and doesn't have
 many "signals", so you're not constantly buying and selling. It's, of
 course, not perfect, but it would have gotten you out of most of the major
-bear markets. 
+bear markets.
 
 ### Required software
 
@@ -50,4 +50,3 @@ GPL
 ### Contact
 
 vinod@kurup.com
- 
