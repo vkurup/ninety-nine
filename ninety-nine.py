@@ -19,15 +19,16 @@ import datetime
 import pickle
 
 symbol = '^GSPC'
-start_date = '20060701'
-end_date = datetime.date.today().strftime('%Y%m%d')
-lookback = 99 # 99-day-high
+start_date = '2006-01-01'
+end_date = datetime.date.today().strftime('%Y-%m-%d')
+lookback = 99  # 99-day-high
+
 
 def float_sorter(item):
     """
-    Key function so that we can sort by day's high (index 2) casted to a float.
+    Key function so that we can sort by day's high (index 1) casted to a float.
     """
-    return float(operator.itemgetter(2)(item))
+    return float(operator.itemgetter(1)(item))
 
 # Load the input file, if available
 try:
@@ -42,31 +43,35 @@ if data:
     # make the date after last date in our input the new start_date
     old_end_date = data["first"][-1][0]
     tmp = [int(c) for c in old_end_date.split('-')]
-    new_start_date = datetime.date(tmp[0],tmp[1],tmp[2]) + datetime.timedelta(1)
-    start_date = new_start_date.strftime('%Y%m%d')
+    new_start_date = datetime.date(tmp[0], tmp[1], tmp[2]) + datetime.timedelta(1)
+    start_date = new_start_date.strftime('%Y-%m-%d')
 
 # Get quotes
 if start_date >= end_date:
     quotes = []
 else:
     quotes = ystockquote.get_historical_prices(symbol, start_date, end_date)
-    # remove header row
-    del quotes[0]
-    # sort by date ascending (Field 0 is date, Field 2 is high, Field 4 is close)
-    quotes.sort(key=operator.itemgetter(0))
+    quotes = ([(q, quotes[q]['Close'], quotes[q]['High']) for q in quotes])
+    # sort by date ascending (Field 0 is date, 1 is close, 2 is high)
+    DATE = 0
+    CLOSE = 1
+    HIGH = 2
+    quotes.sort(key=operator.itemgetter(DATE))
 
 if data:
     first = data["first"]
     rest = quotes
     newhigh_row = sorted(first, key=float_sorter).pop()
-    high = newhigh = float(newhigh_row[2])
+    high = newhigh = float(newhigh_row[HIGH])
     signal = data["signal"]
 else:
     # split into 2 groups
     first, rest = quotes[0:lookback], quotes[lookback:]
+    print(first)
+    print(rest)
     # Find the max of the first group and initialize the signal
     newhigh_row = sorted(first, key=float_sorter).pop()
-    high = float(newhigh_row[2])
+    high = float(newhigh_row[HIGH])
     signal = 0
 
 while rest:
@@ -75,21 +80,20 @@ while rest:
 
     # copy the first element of the 'rest' to our first list
     first.append(rest.pop(0))
-
     # recalculate signal
     newhigh_row = sorted(first, key=float_sorter).pop()
-    newhigh = float(newhigh_row[2])
+    newhigh = float(newhigh_row[HIGH])
     if newhigh > high:
         signal = 1
     elif newhigh < high:
         signal = 0
     else:
-        pass # signal doesn't change
+        pass  # signal doesn't change
 
     high = newhigh
-    close = float(first[-1][4])
+    close = float(first[-1][CLOSE])
     pct_to_rise = round((newhigh - close) / close * 100, 1)
-    print first[-1][0], first[-1][4], newhigh, signal, pct_to_rise
+    print first[-1][DATE], first[-1][CLOSE], newhigh, signal, pct_to_rise
 
 if signal:
     print "Current signal: Buy"
@@ -98,7 +102,7 @@ if signal:
     print "New high will reset in " + str(lookback - (len(first) - index_of_newhigh)) + " days."
 else:
     print "Current signal: Sell"
-    close = float(first[-1][4])
+    close = float(first[-1][1])
     pct_to_rise = str(round((newhigh - close) / close * 100, 1))
     print "Market needs to rise " + pct_to_rise + "% before signal changes."
 
