@@ -20,9 +20,9 @@ ALPHA_VANTAGE_API_KEY = os.environ['ALPHA_VANTAGE_API_KEY']
 HIGH_KEY = '2. high'
 CLOSE_KEY = '4. close'
 
-symbol = '^GSPC'
-start_date = '2006-07-01'
-end_date = datetime.date.today().strftime('%Y-%m-%d')
+symbol = 'SPY'
+start_date = datetime.date(2016, 7, 1)
+end_date = datetime.date.today()
 lookback = 99 # 99-day-high
 
 def float_sorter(item):
@@ -44,16 +44,20 @@ if data:
     # make the date after last date in our input the new start_date
     old_end_date = data["first"][-1][0]
     tmp = [int(c) for c in old_end_date.split('-')]
-    new_start_date = datetime.date(tmp[0], tmp[1], tmp[2]) + datetime.timedelta(1)
-    start_date = new_start_date.strftime('%Y-%m-%d')
+    start_date = datetime.date(tmp[0], tmp[1], tmp[2]) + datetime.timedelta(1)
 
 # Get quotes
 if start_date >= end_date:
     quotes = []
 else:
     ts = TimeSeries(ALPHA_VANTAGE_API_KEY)
-    quotes, metadata = ts.get_daily(symbol, 'full')
+    if end_date - start_date > datetime.timedelta(100):
+        outputsize = 'full'
+    else:
+        outputsize = 'compact'
+    quotes, metadata = ts.get_daily(symbol, outputsize=outputsize)
     quotes = sorted(quotes.items())
+
 
 if data:
     first = data["first"]
